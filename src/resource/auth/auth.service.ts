@@ -1,9 +1,14 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 3;
 import { UsuariosService } from '../usuarios/usuarios.service';
 import { RegisterDto } from './dto/register.dto';
+import { loginDto } from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -21,5 +26,31 @@ export class AuthService {
     }
     registroDto.password = await bcrypt.hash(registroDto.password, 10);
     return await this.usuarioService.crear(registroDto);
+  }
+
+  async login(loginDto: loginDto) {
+    const { usuario, password } = loginDto;
+    const informacionUsuario = await this.usuarioService.buscarPorUser(usuario);
+    if (!informacionUsuario) {
+      throw new BadRequestException('El usuario no esta registrado');
+    }
+    const passwordValido = await bcrypt.compare(
+      password,
+      informacionUsuario.password,
+    );
+    if (!passwordValido) {
+      throw new UnauthorizedException('El password es incorrecto');
+    }
+    const horaAutenticacion = new Date().toDateString();
+    const payload = {
+      usarname: informacionUsuario.usuario,
+      rol: informacionUsuario.rol,
+      time: horaAutenticacion,
+    };
+    const token = await this.jwtService.signAsync(payload);
+    return {
+      token,
+      payload,
+    };
   }
 }
