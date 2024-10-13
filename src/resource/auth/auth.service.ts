@@ -9,6 +9,7 @@ import { JwtService } from '@nestjs/jwt';
 import { UsuariosService } from '../usuarios/usuarios.service';
 import { RegisterDto } from './dto/register.dto';
 import { loginDto } from './dto/login.dto';
+import { UsuarioDocument } from '../usuarios/schemas/usuario.schemas';
 
 @Injectable()
 export class AuthService {
@@ -43,7 +44,7 @@ export class AuthService {
     }
     const horaAutenticacion = new Date().toDateString();
     const payload = {
-      usarname: informacionUsuario.usuario,
+      usuario: informacionUsuario.usuario,
       rol: informacionUsuario.rol,
       time: horaAutenticacion,
     };
@@ -52,5 +53,10 @@ export class AuthService {
       token,
       payload,
     };
+  }
+
+  async buscarPerfil(perfil: Partial<UsuarioDocument>) {
+    const { usuario } = perfil;
+    return await this.usuarioService.buscarPorUser(usuario);
   }
 }
