@@ -24,6 +24,10 @@ export class RegisterDto {
   @IsNotEmpty({ message: 'El campo nombre es obligatorio' })
   readonly nombre: string;
 
+  @IsString({ message: 'El campo email debe ser un string' })
+  @IsOptional()
+  readonly email: string;
+
   @IsString({ message: 'El campo usuario debe ser un string' })
   @IsNotEmpty({ message: 'El campo usuario es obligatorio' })
   readonly usuario: string;

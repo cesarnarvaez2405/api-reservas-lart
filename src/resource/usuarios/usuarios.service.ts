@@ -1,4 +1,9 @@
-import { Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CrearUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { Model } from 'mongoose';
@@ -13,6 +18,11 @@ export class UsuariosService {
 
   async crear(createUsuarioDto: CrearUsuarioDto) {
     const usuarioNuevo = new this.usuarioModel(createUsuarioDto);
+    const { email } = usuarioNuevo;
+    const tieneEmailDuplicado = await this.buscarPorEmail(email);
+    if (tieneEmailDuplicado) {
+      throw new BadRequestException('Ya tienes un email en otro usuario');
+    }
     return await usuarioNuevo.save();
   }
 
@@ -30,6 +40,11 @@ export class UsuariosService {
 
   async buscarPorUser(user: string) {
     const usuario = await this.usuarioModel.findOne({ usuario: user }).exec();
+    return usuario ? usuario : null;
+  }
+
+  async buscarPorEmail(email: string) {
+    const usuario = await this.usuarioModel.findOne({ email }).exec();
     return usuario ? usuario : null;
   }
 
