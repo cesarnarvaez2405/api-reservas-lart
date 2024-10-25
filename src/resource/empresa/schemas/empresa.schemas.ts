@@ -6,6 +6,7 @@ export const EmpresaSchema = new MongooseSchema({
   logo: { type: String, required: false },
   horaApertura: { type: Date, required: true },
   horaCierre: { type: Date, required: true },
+  capacidad: { type: Number, required: true },
   usuarioCreacion: {
     type: MongooseSchema.Types.ObjectId,
     ref: 'usuarios',
@@ -22,6 +23,7 @@ export type EmpresaDocument = Document & {
   logo: string;
   horaApertura: Date;
   horaCierre: Date;
+  capacidad: number;
   usuarioCreacion: Types.ObjectId;
   usuarioActualizacion: Types.ObjectId;
 };

@@ -3,6 +3,7 @@ import {
   IsEmail,
   IsMongoId,
   IsNotEmpty,
+  IsNumber,
   IsString,
 } from 'class-validator';
 
@@ -26,6 +27,10 @@ export class CrearEmpresaDto {
   @IsDateString()
   @IsNotEmpty({ message: 'El campo horaCierre es obligatorio' })
   readonly horaCierre: string;
+
+  @IsNumber()
+  @IsNotEmpty({ message: 'El campo capacidad es obligatorio' })
+  readonly capacidad: number;
 
   @IsMongoId({
     message: 'El campo usuarioCreacion debe ser un ID de Mongo válido',
