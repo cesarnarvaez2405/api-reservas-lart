@@ -1,34 +1,25 @@
-import { Type } from 'class-transformer';
 import {
   IsDateString,
   IsMongoId,
   IsNotEmpty,
   IsNumber,
   IsString,
-  ValidateNested,
 } from 'class-validator';
-
-class ServicioDto {
-  @IsString()
-  @IsNotEmpty({ message: 'El campo nombre en el tipo es obligatorio' })
-  readonly nombre: string;
-
-  @IsMongoId({
-    message: 'El campo empresa es un ID de mongo valido',
-  })
-  @IsNotEmpty({ message: 'El campo empresa es obligatorio' })
-  readonly empresa: string;
-}
 
 export class CrearReservaDto {
   @IsDateString()
   @IsNotEmpty({ message: 'El tiempo es un campo obligatorio' })
   readonly tiempo: string;
 
-  @ValidateNested({ message: 'El campo servicio debe ser un objeto valido' })
+  @IsNumber()
+  @IsNotEmpty({ message: 'La hora es obligatorio' })
+  readonly hora: number;
+
+  @IsMongoId({
+    message: 'El campo empresa es un ID de mongo valido',
+  })
   @IsNotEmpty({ message: 'El campo servicio es obligatorio' })
-  @Type(() => ServicioDto)
-  readonly servicio: ServicioDto;
+  readonly servicio: string;
 
   @IsNumber()
   @IsNotEmpty({ message: 'El campo duracion es obligatorio' })

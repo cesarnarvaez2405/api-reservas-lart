@@ -19,7 +19,6 @@ import { Role } from 'src/common/enums/rol.enum';
 export class ReservasController {
   constructor(private readonly reservasService: ReservasService) {}
 
-  @Auth(Role.Admin)
   @Post()
   crear(@Body() createReservaDto: CrearReservaDto) {
     try {
@@ -35,6 +34,17 @@ export class ReservasController {
     try {
       const estaActiva: boolean = query?.estaActiva;
       return this.reservasService.buscarTodos(estaActiva);
+    } catch (error) {
+      throw new InternalServerErrorException(error.message);
+    }
+  }
+
+  @Get('buscar-por-fecha')
+  buscarPorFecha(@Query() query: any) {
+    try {
+      const fecha: string = query?.fecha;
+      const fechaConsulta = new Date(fecha);
+      return this.reservasService.buscarPorFecha(fechaConsulta);
     } catch (error) {
       throw new InternalServerErrorException(error.message);
     }

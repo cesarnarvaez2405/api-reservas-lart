@@ -24,13 +24,11 @@ export class ServiciosController {
   }
 
   @Get()
-  @Auth(Role.Admin)
   findAll() {
     return this.serviciosService.buscarTodos();
   }
 
   @Get(':id')
-  @Auth(Role.Admin)
   findOne(@Param('id') id: string) {
     return this.serviciosService.buscarPorId(id);
   }

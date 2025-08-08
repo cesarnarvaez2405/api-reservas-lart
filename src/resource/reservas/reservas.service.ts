@@ -37,6 +37,20 @@ export class ReservasService {
     return reservas ? reservas : null;
   }
 
+  async buscarPorFecha(fecha: Date) {
+    const inicioDia = new Date(fecha.setUTCHours(0, 0, 0, 0));
+    const finDia = new Date(fecha.setUTCHours(23, 59, 59, 999));
+
+    const query = {
+      tiempo: {
+        $gte: inicioDia,
+        $lte: finDia,
+      },
+    };
+    const reservas = await this.reservaModel.find(query).exec();
+    return reservas ? reservas : [];
+  }
+
   async actualizar(id: string, updateReservaDto: UpdateReservaDto) {
     await this.buscarPorId(id);
     const query = { _id: id };
